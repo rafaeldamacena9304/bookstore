@@ -28,7 +28,7 @@ jobs:
 
       - name: Test
         run: |
-          poetry run python manage.py test order.tests products.tests
+          poetry run python manage.py test order.tests product.tests
 
       - name: Wemake Python Stylguide
         uses: wemake-services/wemake-python-styleguide@0.16.0
