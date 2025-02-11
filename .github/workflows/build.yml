@@ -50,4 +50,5 @@ jobs:
         run: docker-compose up -d --build
 
       - name: Run Tests
-        run: docker-compose exec backend poetry run python manage.py test order.tests product.tests
+        run: docker-compose exec -T backend poetry run python manage.py test order.tests product.tests
+
