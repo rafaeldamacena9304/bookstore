@@ -1,37 +1,33 @@
-name: Python application
 
-on: [push]
+services:
+  backend:
+    build: .
+    command: poetry run python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/usr/src/app/
+    ports:
+      - 8000:8000
+    env_file:
+      - ./env.dev
+    networks:
+      - backend
+    depends_on:
+      - db
+  
+  db:
+    image: postgres:13.0-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=dev
+      - POSTGRES_PASSWORD=dev
+      - POSTGRES_DB=bookstore_db
+    networks:
+      - backend
 
-jobs:
-  build:
-    strategy:
-      fail-fast: false
-      matrix:
-        python-version: [3.13]
+networks:
+  backend:
+    driver: bridge
 
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v2
-
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v2
-      with:
-        python-version: ${{ matrix.python-version }}
-
-    - name: Install poetry
-      run: |
-        python -m ensurepip
-        python -m pip install --upgrade pip
-        python -m pip install --upgrade poetry
-
-    - name: View poetry --help
-      run: poetry --help
-
-    - name: Install dependencies
-      shell: bash
-      run: python -m poetry install
-
-    - name: Test
-      run: |
-        poetry run python manage.py test
+volumes:
+  postgres_data:
