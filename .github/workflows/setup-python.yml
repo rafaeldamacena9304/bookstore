@@ -1,0 +1,4 @@
+- name: Clear setup-python cache
+  run: |
+    rm -rf $HOME/.cache/pip
+    rm -rf $HOME/.cache/pypoetry
